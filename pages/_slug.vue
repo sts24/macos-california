@@ -48,6 +48,13 @@ export default {
 
 <style>
 
+.app-container {
+	display: grid;
+	grid-template-rows: auto auto 1fr;
+	height: 100vh;
+	max-height: 100vh;
+}
+
 .app-header {
   text-align: center;
   font-size: 2em;
@@ -58,7 +65,6 @@ export default {
 .app {
 	display: grid;
 	grid-template-columns: 2fr 1fr;
-	min-height: 100vh;
 }
 
 .location-content {
