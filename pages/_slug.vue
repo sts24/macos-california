@@ -16,7 +16,7 @@
 				<nuxt-content :document="article" />
 			</section>
 
-			<Map :location="article.location" />
+			<Map :coords="article.location" />
 
 		</main>
 
