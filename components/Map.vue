@@ -1,28 +1,39 @@
 <template>
   <section class="map-area">
 
-	  {{ location }}
+	  <Mapbox 
+	 	access-token="pk.eyJ1Ijoic3RzMjQiLCJhIjoiOVB0MlNrbyJ9.aIGsCG9-ISYzL-jNTaz5cg" 
+		:map-options="{ 
+			style: 'mapbox://styles/mapbox/outdoors-v11',
+			center: [-119.637801, 37.731437 ], // long and lat
+			zoom: 11,
+			}" 
+		/>
 
-	  <MglMap :accessToken="accessToken" :mapStyle="mapStyle" />
 
   </section>
 </template>
 
 <script>
-import Mapbox from "mapbox-gl";
-import { MglMap } from "vue-mapbox";
+import Mapbox from 'mapbox-gl-vue'
 
 export default {
+	components: { Mapbox },
 	props: ['location'],
-	data() {
+	head() {
 		return {
-			accessToken: 'pk.eyJ1Ijoic3RzMjQiLCJhIjoiOVB0MlNrbyJ9.aIGsCG9-ISYzL-jNTaz5cg', // your access token. Needed if you using Mapbox maps
-			mapStyle: MAP_STYLE // your map style
-		};
-	},
-	created() {
-		// We need to set mapbox-gl library here in order to use it in template
-		this.mapbox = Mapbox;
+			script: [
+				{
+					'src': 'https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js'
+				}
+			],
+			link: [
+				{ 
+					'href': 'https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.css',
+					'rel': 'stylesheet'
+				}
+			]
+		}
 	}
 }
 
@@ -30,10 +41,13 @@ export default {
 </script>
 
 <style>
-	@import "https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css";
-
 	.map-area {
 		order: 1;
 		background: gray;
+	}
+
+	#map {
+		width: 100%;
+ 		height: 100%;
 	}
 </style>
