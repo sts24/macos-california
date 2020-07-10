@@ -3,9 +3,13 @@
 
 	<ul>
 		<li v-for="item of NavData" :key="item.slug">
-			<nuxt-link :to="item.slug">
+			<nuxt-link :to="item.slug" class="release-icon">
+				<cld-image cloudName="stsmith" :publicId="'macos-california/' + item.slug" crop="fill" width="200" height="200" />
 				<span class="link-number">{{ item.version }}</span>
-				<span class="link-label">{{ item.title }}</span>
+			</nuxt-link>
+
+			<nuxt-link :to="item.slug" class="release-title" aria-hidden="true">
+				{{ item.title }}
 			</nuxt-link>
 		</li>
 	</ul>
@@ -14,6 +18,8 @@
 </template>
 
 <script>
+import Cloudinary from "cloudinary-vue";
+
 export default {
 	props: ['NavData']
 }
@@ -37,27 +43,50 @@ export default {
 		padding: 0;
 	}
 	
-	.app-nav > ul > li > a {
-		display: block;
+
+	.release-icon {
 		text-decoration: none;
-	}
 
-	.app-nav > ul > li > a.nuxt-link-active .link-number {
-		outline: 3px solid blue;
-	}
-
-	.link-number {
-		display: flex;
-		width: 100px;
-		height: 100px;
-		background-color: gray;
+		display: grid;
 		justify-content: center;
 		align-items: center;
-		color: black;
-		font-size: 1.5em;
+		width: 100px;
+		height: 100px;
 	}
 
-	.link-label {
+		.release-icon .cld-image {
+			z-index: 1;
+			grid-column: 1 / 2;
+			grid-row: 1 / 2;
+			border-radius: 100%;
+			overflow: hidden;
+		}
+
+			.release-icon .cld-image img {
+				display: block;
+				width: 100%;
+				height: 100%;
+			}
+
+			.release-icon.nuxt-link-active .cld-image {
+				box-shadow: 0 0 0 3px blue;
+			}
+
+	.link-number {
+		color: white;
+		font-size: 1.5em;
+		z-index: 2;
+		grid-column: 1 / 2;
+		grid-row: 1 / 2;
+		text-align: center;
+		text-shadow: 0 0 5px black;
+	}
+
+
+
+
+	.release-title {
+		text-decoration: none;
 		display: block;
 		margin-top: 0.5em;
 		text-align: center;

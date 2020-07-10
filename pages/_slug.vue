@@ -90,12 +90,12 @@ p.release-date {
 	margin-bottom: 1em;
 }
 
-.cld-image {
+.location-content.cld-image {
 	order: -1;
 	margin: -2rem -2rem 2rem -2rem;
 }
 
-.cld-image img {
+.location-content .cld-image img {
 	width: 100%;
 	height: auto;
 	display: block;
