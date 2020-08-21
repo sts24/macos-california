@@ -3,13 +3,8 @@
 
 	  <Mapbox 
 	 	access-token="pk.eyJ1Ijoic3RzMjQiLCJhIjoiOVB0MlNrbyJ9.aIGsCG9-ISYzL-jNTaz5cg" 
-		:map-options="{ 
-			style: 'mapbox://styles/mapbox/outdoors-v11',
-			center: coordsFormatted, // long and lat
-			zoom: 11,
-			}" 
+		:map-options="mapOptions" 
 		/>
-
 
   </section>
 </template>
@@ -19,12 +14,45 @@ import Mapbox from 'mapbox-gl-vue'
 
 export default {
 	components: { Mapbox },
-	props: ['coords'],
-	computed: {
-		coordsFormatted: function(){
-			const coordArray = this.coords.split(',');
-			return [ coordArray[1], coordArray[0] ];
+	data(){
+		return {
+			// defaults to center of california
+			mapOptions: {
+				style: 'mapbox://styles/mapbox/outdoors-v11',
+				center: [ -119.44944, 37.16611 ],
+				zoom: 5
+			}
 		}
+	},
+	async asyncData({ params, $content }){
+		const newLocation = await $content('releases', this.$route.params.slug)
+			.only(['location'])
+			.fetch();
+
+
+		const coordArray = newLocation.location.split(',');
+
+		// Vue.set(this, mapOptions.center, [ coordArray[1], coordArray[0] ]);
+		// Vue.set(this, mapOptions.zoom, 7);
+
+		return {
+			mapOptions: {
+				'center': [ coordArray[1], coordArray[0] ],
+				'zoom': 7
+			}
+		}
+
+		return true
+	},
+	async fetch(){
+		const newLocation = await this.$content('releases', this.$route.params.slug)
+			.only(['location'])
+			.fetch();
+
+		const coordArray = newLocation.location.split(',');
+
+		this.mapOptions.center = [ coordArray[1], coordArray[0] ];
+		this.mapOptions.zoom = 7;
 	},
 	head() {
 		return {
@@ -42,12 +70,18 @@ export default {
 
 </script>
 
-<style>
+<style lang="scss">
 	.map-area {
 		order: 1;
-		background: gray;
+		background: var(--gray);
+
+		grid-column: 1 / 3;
+		grid-row: 1 / 2;
 	}
 
+	.map-marker {
+		cursor: pointer;
+	}
 	#map {
 		width: 100%;
  		height: 100%;

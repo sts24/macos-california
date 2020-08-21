@@ -1,8 +1,9 @@
 <template>
+
   <nav class="app-nav">
 
-	<ul>
-		<li v-for="item of NavData" :key="item.slug">
+	<ul v-if="navData">
+		<li v-for="item of navData" :key="item.slug">
 			<nuxt-link :to="item.slug" class="release-icon">
 				<cld-image cloudName="stsmith" :publicId="'macos-california/' + item.slug" crop="fill" width="200" height="200" />
 				<span class="link-number">{{ item.version }}</span>
@@ -15,19 +16,31 @@
 	</ul>
 
   </nav>
+
 </template>
 
 <script>
 import Cloudinary from "cloudinary-vue";
 
 export default {
-	props: ['NavData']
+	data(){
+		return {
+			navData: []
+		}
+	},
+	async fetch(){
+		this.navData = await this.$content('releases')
+			.only(['title', 'slug', 'version'])
+			.sortBy('releaseDate', 'asc')
+			.fetch();
+	}
 }
 </script>
 
-<style>
+<style lang="scss">
 	.app-nav {
 		padding: 1rem;
+		overflow-x: scroll;
 	}
 
 	.app-nav > ul {
@@ -42,7 +55,7 @@ export default {
 		margin: 0;
 		padding: 0;
 	}
-	
+
 
 	.release-icon {
 		text-decoration: none;
@@ -50,8 +63,14 @@ export default {
 		display: grid;
 		justify-content: center;
 		align-items: center;
-		width: 100px;
-		height: 100px;
+		width: 80px;
+		height: 80px;
+		margin: 0 0.5rem;
+
+		@media (min-width: 768px){
+			width: 100px;
+			height: 100px;
+		}
 	}
 
 		.release-icon .cld-image {
@@ -68,18 +87,22 @@ export default {
 				height: 100%;
 			}
 
-			.release-icon.nuxt-link-active .cld-image {
-				box-shadow: 0 0 0 3px blue;
+			.release-icon.active .cld-image {
+				box-shadow: 0 0 0 4px var(--link);
 			}
 
 	.link-number {
 		color: white;
-		font-size: 1.5em;
+		font-size: 1.25em;
 		z-index: 2;
 		grid-column: 1 / 2;
 		grid-row: 1 / 2;
 		text-align: center;
 		text-shadow: 0 0 5px black;
+
+		@media (min-width: 768px){
+			font-size: 1.5em;
+		}
 	}
 
 
@@ -92,6 +115,11 @@ export default {
 		text-align: center;
 		font-weight: bold;
 		color: black;
+		font-size: 0.875rem;
+
+		@media (min-width: 768px){
+			font-size: 1rem;
+		}
 	}
 
 </style>
